@@ -45,6 +45,10 @@ public class ParseJSON {
 
                 mydb = new DBHelper(_activity);
 
+                if (mydb.getAllData(table_name).size() > 0) {
+                    mydb.deleteAll(table_name);
+                }
+
                 JSONArray imgs = jo.getJSONArray("multimedia");
                 JSONObject imgobj = imgs.getJSONObject(imgs.length() / 2);
 

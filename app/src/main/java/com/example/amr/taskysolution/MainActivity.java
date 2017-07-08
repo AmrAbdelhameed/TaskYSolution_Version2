@@ -100,16 +100,11 @@ public class MainActivity extends AppCompatActivity {
     private void sendRequest(String x) {
 
         dialog.show();
-        mydb = new DBHelper(MainActivity.this);
 
         StringRequest stringRequest = new StringRequest("http://api.nytimes.com/svc/topstories/v2/" + x + ".json?api_key=b8e44f592a524d3db24fcb3636f874e5",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
-                        if (mydb.getAllData(choose).size() > 0) {
-                            mydb.deleteAll(choose);
-                        }
 
                         ParseJSON pj = new ParseJSON(MainActivity.this, response);
                         pj.parseJSON();
@@ -147,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
+                        mydb = new DBHelper(MainActivity.this);
+
                         sarr = mydb.getAllData(choose);
 
                         if (sarr.size() > 0) {
@@ -165,10 +162,6 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "No Data", Toast.LENGTH_SHORT).show();
                         }
                         dialog.dismiss();
-                        finish();
-                        overridePendingTransition(0, 0);
-                        startActivity(getIntent());
-                        overridePendingTransition(0, 0);
                     }
                 }) {
 
