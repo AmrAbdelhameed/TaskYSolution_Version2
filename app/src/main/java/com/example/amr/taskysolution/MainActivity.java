@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     boolean h;
     ArrayList<String> arr;
     DBHelper mydb;
-    ArrayList<Sample> s;
+    ArrayList<Sample> sarr;
     String choose;
     private ProgressDialog dialog;
 
@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPreferences_name", Context.MODE_PRIVATE);
         choose = sharedPreferences.getString("choose", "home");
-
-        mydb = new DBHelper(MainActivity.this);
 
         sendRequest(choose);
 
@@ -102,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     private void sendRequest(String x) {
 
         dialog.show();
+        mydb = new DBHelper(MainActivity.this);
 
         StringRequest stringRequest = new StringRequest("http://api.nytimes.com/svc/topstories/v2/" + x + ".json?api_key=b8e44f592a524d3db24fcb3636f874e5",
                 new Response.Listener<String>() {
@@ -148,17 +147,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
-                        s = mydb.getAllData(choose);
+                        sarr = mydb.getAllData(choose);
 
-                        if (s.size() > 0) {
+                        if (sarr.size() > 0) {
 
-                            CustomList c2 = new CustomList(MainActivity.this, s);
+                            CustomList c2 = new CustomList(MainActivity.this, sarr);
                             listView.setAdapter(c2);
 
                             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-                                    Toast.makeText(MainActivity.this, s.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, sarr.get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
                                 }
                             });
@@ -166,6 +165,10 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "No Data", Toast.LENGTH_SHORT).show();
                         }
                         dialog.dismiss();
+                        finish();
+                        overridePendingTransition(0, 0);
+                        startActivity(getIntent());
+                        overridePendingTransition(0, 0);
                     }
                 }) {
 
@@ -203,8 +206,6 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("choose", s);
                     editor.commit();
-
-                    mydb = new DBHelper(MainActivity.this);
 
                     sendRequest(s);
                 }
