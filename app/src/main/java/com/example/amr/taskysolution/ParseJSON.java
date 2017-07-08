@@ -34,7 +34,7 @@ public class ParseJSON {
             users = jsonObject.getJSONArray("results");
 
             data_array = new ArrayList<>();
-
+            Toast.makeText(_activity, "get hena ana w mfesh net ezai msh 3aref xD", Toast.LENGTH_SHORT).show();
             for (int i = 0; i < users.length(); i++) {
                 JSONObject jo = users.getJSONObject(i);
 
@@ -43,12 +43,6 @@ public class ParseJSON {
                 SharedPreferences sharedPreferences = _activity.getSharedPreferences("sharedPreferences_name", Context.MODE_PRIVATE);
                 String table_name = sharedPreferences.getString("choose", "home");
 
-                mydb = new DBHelper(_activity);
-
-                if (mydb.getAllData(table_name).size() > 0) {
-                    mydb.deleteAll(table_name);
-                }
-
                 JSONArray imgs = jo.getJSONArray("multimedia");
                 JSONObject imgobj = imgs.getJSONObject(imgs.length() / 2);
 
@@ -56,6 +50,7 @@ public class ParseJSON {
                 s.setPublished_date(jo.getString("published_date").substring(0, 10));
                 s.setUrl(imgobj.getString("url"));
 
+                mydb = new DBHelper(_activity);
                 mydb.insertData(jo.getString("title"), jo.getString("published_date").substring(0, 10), imgobj.getString("url"), table_name);
 
                 data_array.add(s);

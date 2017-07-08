@@ -38,6 +38,9 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void insertData(String title, String published_date, String imageurl, String story) {
+        if (getAllData(story).size() > 0) {
+            deleteAll(story);
+        }
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONTACTS_COLUMN_TITLE, title);
