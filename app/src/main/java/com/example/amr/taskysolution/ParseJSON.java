@@ -15,15 +15,17 @@ public class ParseJSON {
 
     public static ArrayList<Sample> data_array;
     public static Sample s;
-    DBHelper mydb;
+    DBHelper mydb,mydb2;
     Activity _activity;
+    String table_name;
 
     private JSONArray users = null;
     private String json;
 
-    public ParseJSON(Activity _activity, String json) {
+    public ParseJSON(Activity _activity, String json , String table_name) {
         this.json = json;
         this._activity = _activity;
+        this.table_name = table_name;
     }
 
     protected void parseJSON() {
@@ -34,14 +36,16 @@ public class ParseJSON {
             users = jsonObject.getJSONArray("results");
 
             data_array = new ArrayList<>();
-            Toast.makeText(_activity, "get hena ana w mfesh net ezai msh 3aref xD", Toast.LENGTH_SHORT).show();
+
+            mydb2 = new DBHelper(_activity);
+            if (mydb2.getAllData(table_name).size() > 0) {
+                mydb2.deleteAll(table_name);
+            }
+
             for (int i = 0; i < users.length(); i++) {
                 JSONObject jo = users.getJSONObject(i);
 
                 s = new Sample();
-
-                SharedPreferences sharedPreferences = _activity.getSharedPreferences("sharedPreferences_name", Context.MODE_PRIVATE);
-                String table_name = sharedPreferences.getString("choose", "home");
 
                 JSONArray imgs = jo.getJSONArray("multimedia");
                 JSONObject imgobj = imgs.getJSONObject(imgs.length() / 2);

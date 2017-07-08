@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         arr.add(0, choose);
     }
 
-    private void sendRequest(String x) {
+    private void sendRequest(final String x) {
 
         dialog.show();
 
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
 
-                        ParseJSON pj = new ParseJSON(MainActivity.this, response);
+                        ParseJSON pj = new ParseJSON(MainActivity.this, response, x);
                         pj.parseJSON();
 
                         CustomList cl = new CustomList(MainActivity.this, ParseJSON.data_array);
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
                         mydb = new DBHelper(MainActivity.this);
 
-                        sarr = mydb.getAllData(choose);
+                        sarr = mydb.getAllData(x);
 
                         if (sarr.size() > 0) {
 
