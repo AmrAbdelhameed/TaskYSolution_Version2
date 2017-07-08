@@ -15,7 +15,7 @@ public class ParseJSON {
 
     public static ArrayList<Sample> data_array;
     public static Sample s;
-//    DBHelper mydb;
+    DBHelper mydb;
     Activity _activity;
 
     private JSONArray users = null;
@@ -40,9 +40,10 @@ public class ParseJSON {
 
                 s = new Sample();
 
-//                SharedPreferences sharedPreferences = _activity.getSharedPreferences("sharedPreferences_name", Context.MODE_PRIVATE);
-//                String choose = sharedPreferences.getString("choose", "home");
-//                mydb = new DBHelper(_activity, choose);
+                SharedPreferences sharedPreferences = _activity.getSharedPreferences("sharedPreferences_name", Context.MODE_PRIVATE);
+                String table_name = sharedPreferences.getString("choose", "home");
+
+                mydb = new DBHelper(_activity);
 
                 JSONArray imgs = jo.getJSONArray("multimedia");
                 JSONObject imgobj = imgs.getJSONObject(imgs.length() / 2);
@@ -51,11 +52,7 @@ public class ParseJSON {
                 s.setPublished_date(jo.getString("published_date").substring(0, 10));
                 s.setUrl(imgobj.getString("url"));
 
-//                if (mydb.insertData(jo.getString("title"), jo.getString("published_date").substring(0, 10), imgobj.getString("url"))) {
-//                    Toast.makeText(_activity, "Added Successfully " + + i + " " + choose, Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(_activity, "Not Added ...", Toast.LENGTH_SHORT).show();
-//                }
+                mydb.insertData(jo.getString("title"), jo.getString("published_date").substring(0, 10), imgobj.getString("url"), table_name);
 
                 data_array.add(s);
             }

@@ -35,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     boolean h;
     ArrayList<String> arr;
-//    DBHelper mydb;
-//    ArrayList<Sample2> s;
+    DBHelper mydb;
+    ArrayList<Sample> s;
+    String choose;
     private ProgressDialog dialog;
 
     @Override
@@ -54,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
 
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPreferences_name", Context.MODE_PRIVATE);
-        String choose = sharedPreferences.getString("choose", "automobiles");
+        choose = sharedPreferences.getString("choose", "home");
 
-//        mydb = new DBHelper(MainActivity.this, choose);
+        mydb = new DBHelper(MainActivity.this);
 
         sendRequest(choose);
 
@@ -64,12 +65,12 @@ public class MainActivity extends AppCompatActivity {
 
         arr = new ArrayList<String>();
 
+        arr.add("home");
+        arr.add("arts");
         arr.add("automobiles");
         arr.add("books");
         arr.add("business");
         arr.add("fashion");
-        arr.add("home");
-        arr.add("arts");
         arr.add("food");
         arr.add("health");
         arr.add("insider");
@@ -107,11 +108,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
 
-//                        if (mydb.getAllData().size() > 0) {
-//                            mydb.deleteAll();
-//                        }
+                        if (mydb.getAllData(choose).size() > 0) {
+                            mydb.deleteAll(choose);
+                        }
 
-                        ParseJSON pj = new ParseJSON(MainActivity.this,response);
+                        ParseJSON pj = new ParseJSON(MainActivity.this, response);
                         pj.parseJSON();
 
                         CustomList cl = new CustomList(MainActivity.this, ParseJSON.data_array);
@@ -147,18 +148,23 @@ public class MainActivity extends AppCompatActivity {
                         }
                         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
-//                        s = mydb.getAllData();
-//
-//                        CustomListDB cl = new CustomListDB(MainActivity.this, s);
-//                        listView.setAdapter(cl);
-//
-//                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//
-//                                Toast.makeText(MainActivity.this, s.get(position).getTitleDB(), Toast.LENGTH_SHORT).show();
-//
-//                            }
-//                        });
+                        s = mydb.getAllData(choose);
+
+                        if (s.size() > 0) {
+
+                            CustomList c2 = new CustomList(MainActivity.this, s);
+                            listView.setAdapter(c2);
+
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+
+                                    Toast.makeText(MainActivity.this, s.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                        } else {
+                            Toast.makeText(MainActivity.this, "No Data", Toast.LENGTH_SHORT).show();
+                        }
                         dialog.dismiss();
                     }
                 }) {
@@ -197,6 +203,8 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("choose", s);
                     editor.commit();
+
+                    mydb = new DBHelper(MainActivity.this);
 
                     sendRequest(s);
                 }
