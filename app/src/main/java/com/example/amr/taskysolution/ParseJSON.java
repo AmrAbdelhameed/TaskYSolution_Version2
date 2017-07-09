@@ -1,9 +1,6 @@
 package com.example.amr.taskysolution;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,14 +12,14 @@ public class ParseJSON {
 
     public static ArrayList<Sample> data_array;
     public static Sample s;
-    DBHelper mydb,mydb2;
+    DBHelper mydb, mydb2;
     Activity _activity;
     String table_name;
 
     private JSONArray users = null;
     private String json;
 
-    public ParseJSON(Activity _activity, String json , String table_name) {
+    public ParseJSON(Activity _activity, String json, String table_name) {
         this.json = json;
         this._activity = _activity;
         this.table_name = table_name;

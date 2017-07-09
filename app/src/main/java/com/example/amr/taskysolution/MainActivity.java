@@ -146,21 +146,21 @@ public class MainActivity extends AppCompatActivity {
 
                         sarr = mydb.getAllData(x);
 
-                        if (sarr.size() > 0) {
-
-                            CustomList c2 = new CustomList(MainActivity.this, sarr);
-                            listView.setAdapter(c2);
-
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-
-                                    Toast.makeText(MainActivity.this, sarr.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-
-                                }
-                            });
-                        } else {
+                        if (sarr.size() == 0) {
                             Toast.makeText(MainActivity.this, "No Data", Toast.LENGTH_SHORT).show();
                         }
+
+                        CustomList c2 = new CustomList(MainActivity.this, sarr);
+                        listView.setAdapter(c2);
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+
+                                Toast.makeText(MainActivity.this, sarr.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
                         dialog.dismiss();
                     }
                 }) {
