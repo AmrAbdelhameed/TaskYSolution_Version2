@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listView);
 
+        mydb = new DBHelper(MainActivity.this);
+
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPreferences_name", Context.MODE_PRIVATE);
         choose = sharedPreferences.getString("choose", "home");
 
@@ -107,15 +109,15 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
 
                         ParseJSON pj = new ParseJSON(MainActivity.this, response, x);
-                        pj.parseJSON();
+                        sarr = pj.parseJSON();
 
-                        CustomList cl = new CustomList(MainActivity.this, ParseJSON.data_array);
+                        CustomList cl = new CustomList(MainActivity.this, sarr);
                         listView.setAdapter(cl);
 
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-                                Toast.makeText(MainActivity.this, ParseJSON.data_array.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, sarr.get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -141,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
                             message = "Connection TimeOut! Please check your internet connection.";
                         }
                         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-
-                        mydb = new DBHelper(MainActivity.this);
 
                         sarr = mydb.getAllData(x);
 

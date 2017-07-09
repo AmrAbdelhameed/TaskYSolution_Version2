@@ -1,6 +1,7 @@
 package com.example.amr.taskysolution;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,22 +11,22 @@ import java.util.ArrayList;
 
 public class ParseJSON {
 
-    public static ArrayList<Sample> data_array;
-    public static Sample s;
-    DBHelper mydb, mydb2;
-    Activity _activity;
+    ArrayList<Sample> data_array;
+    Sample s;
+    DBHelper mydb;
+    Context context;
     String table_name;
 
-    private JSONArray users = null;
-    private String json;
+    JSONArray users = null;
+    String json;
 
-    public ParseJSON(Activity _activity, String json, String table_name) {
+    public ParseJSON(Context context, String json, String table_name) {
         this.json = json;
-        this._activity = _activity;
+        this.context = context;
         this.table_name = table_name;
     }
 
-    protected void parseJSON() {
+    public ArrayList<Sample> parseJSON() {
 
         JSONObject jsonObject = null;
         try {
@@ -34,9 +35,9 @@ public class ParseJSON {
 
             data_array = new ArrayList<>();
 
-            mydb2 = new DBHelper(_activity);
-            if (mydb2.getAllData(table_name).size() > 0) {
-                mydb2.deleteAll(table_name);
+            mydb = new DBHelper(context);
+            if (mydb.getAllData(table_name).size() > 0) {
+                mydb.deleteAll(table_name);
             }
 
             for (int i = 0; i < users.length(); i++) {
@@ -51,7 +52,7 @@ public class ParseJSON {
                 s.setPublished_date(jo.getString("published_date").substring(0, 10));
                 s.setUrl(imgobj.getString("url"));
 
-                mydb = new DBHelper(_activity);
+                mydb = new DBHelper(context);
                 mydb.insertData(jo.getString("title"), jo.getString("published_date").substring(0, 10), imgobj.getString("url"), table_name);
 
                 data_array.add(s);
@@ -59,5 +60,6 @@ public class ParseJSON {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return data_array;
     }
 }
